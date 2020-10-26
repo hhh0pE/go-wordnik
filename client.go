@@ -2,7 +2,9 @@ package wordnik
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
@@ -68,7 +70,11 @@ func (c *Client) doRequest(req *http.Request, dst interface{}) error {
 		return nil
 	}
 
-	return json.NewDecoder(res.Body).Decode(dst)
+	bodyBytes, _ := ioutil.ReadAll(res.Body)
+	fmt.Println("wordnik.Client doRequest body", string(bodyBytes))
+	return json.Unmarshal(bodyBytes, &dst)
+
+	//return json.NewDecoder(res.Body).Decode(dst)
 }
 
 // basicGetRequest is a helper method which makes most of the GET requests
