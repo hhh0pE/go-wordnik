@@ -61,6 +61,8 @@ func (c *Client) formRequest(relativePath *url.URL, vals url.Values, method stri
 	return request, nil
 }
 
+var ErrApiRateLimit = errors.New("API rate limit exceeded")
+
 func (c *Client) doRequest(req *http.Request, dst interface{}) error {
 	res, err := c.client.Do(req)
 	if err != nil {
@@ -75,6 +77,9 @@ func (c *Client) doRequest(req *http.Request, dst interface{}) error {
 	bodyBytes, _ := ioutil.ReadAll(res.Body)
 	msg, getMsgErr := jsonparser.GetString(bodyBytes, "message")
 	if msg != "" && getMsgErr == nil {
+		if msg == ErrApiRateLimit.Error() {
+			return ErrApiRateLimit
+		}
 		return errors.New(msg)
 	}
 	return json.Unmarshal(bodyBytes, &dst)
