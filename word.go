@@ -7,6 +7,7 @@ import (
 
 // The WordObject as defined by the Wordnik API.
 type WordObject struct {
+	BaseResponse
 	ID            int64    `json:"id"`
 	Word          string   `json:"word"`
 	OriginalWord  string   `json:"originalWord"`
@@ -17,6 +18,7 @@ type WordObject struct {
 
 // ExampleSearchResults as defined by the Wordnik API.
 type ExampleSearchResults struct {
+	BaseResponse
 	Facets   []Facet   `json:"facets"`
 	Examples []Example `json:"examples"`
 }

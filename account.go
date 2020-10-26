@@ -6,9 +6,14 @@ import (
 	"net/url"
 )
 
+type BaseResponse struct {
+	Message string `json:"message"`
+}
+
 // AuthenticationToken as defined by the Wordnik API. Needed for user-specific
 // requests.
 type AuthenticationToken struct {
+	BaseResponse
 	Token         string `json:"token"`
 	UserID        int64  `json:"userId"`
 	UserSignature string `json:"userSignature"`
@@ -16,6 +21,7 @@ type AuthenticationToken struct {
 
 // APITokenStatus as defined by the Wordnik API.
 type APITokenStatus struct {
+	BaseResponse
 	Valid           bool   `json:"valid"`
 	Token           string `json:"token"`
 	ResetsInMillis  int64  `json:"resetsInMillis"`
@@ -26,6 +32,7 @@ type APITokenStatus struct {
 
 // User as defined by the Wordnik API.
 type User struct {
+	BaseResponse
 	ID          int64  `json:"id"`
 	Username    string `json:"username"`
 	Email       string `json:"email"`

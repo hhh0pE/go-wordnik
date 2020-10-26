@@ -2,12 +2,14 @@ package wordnik
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/buger/jsonparser"
 )
 
 const (
@@ -71,10 +73,11 @@ func (c *Client) doRequest(req *http.Request, dst interface{}) error {
 	}
 
 	bodyBytes, _ := ioutil.ReadAll(res.Body)
-	fmt.Println("wordnik.Client doRequest body", string(bodyBytes))
+	msg, getMsgErr := jsonparser.GetString(bodyBytes, "message")
+	if msg != "" && getMsgErr == nil {
+		return errors.New(msg)
+	}
 	return json.Unmarshal(bodyBytes, &dst)
-
-	//return json.NewDecoder(res.Body).Decode(dst)
 }
 
 // basicGetRequest is a helper method which makes most of the GET requests
